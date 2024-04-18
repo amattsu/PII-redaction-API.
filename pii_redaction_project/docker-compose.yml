@@ -1,11 +1,26 @@
-version: '3'
+version: '3.8'
+
 services:
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:80
     volumes:
-      - .:/code
+      - .:/code  # Монтируем текущую директорию в контейнер
     ports:
-      - "80:80"
+      - "80:80"  # Проброс порта 80 с хоста на порт 80 в контейнере
     environment:
-      - OPENAI_API_KEY=your_openai_api_key_here
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=pii_redaction_db
+      - POSTGRES_USER=pii_redaction_user
+      - POSTGRES_PASSWORD=pii_redaction_password
+
+volumes:
+  postgres_data:  # Определение тома для постоянного хранения данных базы данных
