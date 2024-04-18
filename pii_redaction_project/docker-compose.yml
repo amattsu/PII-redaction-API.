@@ -5,9 +5,9 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:80
     volumes:
-      - .:/code  # Монтируем текущую директорию в контейнер
+      - .:/code
     ports:
-      - "80:80"  # Проброс порта 80 с хоста на порт 80 в контейнере
+      - "80:80"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
@@ -23,4 +23,4 @@ services:
       - POSTGRES_PASSWORD=pii_redaction_password
 
 volumes:
-  postgres_data:  # Определение тома для постоянного хранения данных базы данных
+  postgres_data:
