@@ -39,16 +39,17 @@ class RedactPIIView(APIView):
         }
         data = {
             'model': 'gpt-3.5-turbo',
-            'prompt': f'Redact PII: {text}',
-            'temperature': 0.5,
+            'messages': [
+                {"role": "user", "content": f"Redact PII: {text}"},
+            ],
             'max_tokens': 512
         }
 
         # Post request to OpenAI API
         try:
-            response = requests.post('https://api.openai.com/v1/completions', json=data, headers=headers)
+            response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
             if response.status_code == 200:
-                return response.json()['choices'][0]['text']
+                return response.json()['choices'][0]['message']['content']
             else:
                 # Handle errors from the API response
                 error_msg = response.json().get('error', 'Failed to communicate with OpenAI API')
